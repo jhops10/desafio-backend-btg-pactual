@@ -1,10 +1,13 @@
 package com.jhops10.order_ms.service;
 
 
+import com.jhops10.order_ms.controller.dto.OrderResponse;
 import com.jhops10.order_ms.entity.OrderEntity;
 import com.jhops10.order_ms.entity.OrderItem;
 import com.jhops10.order_ms.listener.dto.OrderCreatedEvent;
 import com.jhops10.order_ms.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +33,12 @@ public class OrderService {
 
         orderRepository.save(entity);
 
+    }
+
+    public Page<OrderResponse> findAllByCustomerId(Long customerId, PageRequest pageRequest) {
+        var orders = orderRepository.findAllByCustomerId(customerId, pageRequest);
+
+        return orders.map(OrderResponse::fromEntity);
     }
 
     private BigDecimal getTotal(OrderCreatedEvent event) {
